@@ -1,10 +1,6 @@
 <template>
   <div id="nav">
-    <router-link to="/about">About</router-link>
+    <router-view></router-view>
   </div>
-  <router-view/>
 </template>
-
-<style lang="scss">
-
-</style>
+<style lang="scss"></style>

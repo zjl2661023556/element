@@ -5,7 +5,7 @@ import { ElMessage } from 'element-plus'
 // import { TOKEN } from '@/common/common.js'
 // 导入store
 import store from '@/store/index.js'
-
+import { isCheckTimeOut } from './auth'
 // 封装token
 const server = axios.create({
   timeout: 5000,
@@ -18,14 +18,19 @@ const server = axios.create({
 // 请求拦截  封装token
 server.interceptors.request.use(
   (config) => {
-    // 1 if (whiteUrl.includes(config.url) <= -1) {
-    // 请求的不是login
-
-    // 判断token 时候存在 不存在 不封装
-    if (store.getters.token) {
-      config.headers.Authorzation = `Bearer${store.getters.test}`
+    if (isCheckTimeOut()) {
+      // 过期执行退出
+      store.dispatch('user/logout')
+      // 不应该请求
+      return Promise.reject(new Error('token 过期'))
     }
+    if (store.getters.token) {
+      // 1 if (whiteUrl.includes(config.url) <= -1) {
+      // 请求的不是login
 
+      // 判断token 时候存在 不存在 不封装
+      config.headers.Authorization = `Bearer ${store.getters.token}`
+    }
     // 1 }
     return config
   },
@@ -51,7 +56,19 @@ server.interceptors.response.use(
     }
   },
   (error) => {
+    // token 失效 code=401 单点登录 后台会返回特定的状态码 执行退出
+    if (
+      error.response &&
+      error.response.data &&
+      error.response.data.code === 401
+    ) {
+      store.dispatch('user/logout')
+    }
     // 服务器没有返回数据或者是服务器未知错误
+    ElMessage({
+      type: 'error',
+      message: error.message
+    })
     return Promise.reject(error)
   }
 )

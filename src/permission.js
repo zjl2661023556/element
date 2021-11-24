@@ -13,7 +13,16 @@ router.beforeEach((to, from, next) => {
     if (to.path === '/') {
       next('/index')
     } else {
-      next()
+      // 登录成功 跳转到首页 判断没有用户的信息 就去发送axios
+      if (!store.getters.hasUserInfo) {
+        // 判断没有用户的信息，就去发送axios
+        setTimeout(async () => {
+          await store.dispatch('user/getUserInfo')
+          next()
+        }, 70)
+      } else {
+        next()
+      }
     }
     // 未登录
   } else {

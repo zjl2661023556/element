@@ -1,0 +1,10 @@
+.list-enter-active,
+.list-leace-active{
+  transition: all 1s ease;
+  position: absolute;
+}
+.list-enter-from,
+.list-leave-tp {
+  opacity:0;
+  transform: translateX(100px);
+}

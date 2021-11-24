@@ -42,7 +42,7 @@ devServer:{
       // 代理的目标网址
       target: 'https://api.imooc-admin.lgdsunday.club',
       // 是否开启代理
-        changeOrigin : true,
+      changeOrigin : true,
       // 重写url
       // pathRewrite:{
       //   '^/api':''

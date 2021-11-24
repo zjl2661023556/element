@@ -93,7 +93,7 @@ const handleLogin = () => {
 </script>
 
 <style lang="scss" scoped>
-$bg: #2e9784;
+$bg: #282c34;
 //最外面盒子的设置
 .box {
   min-height: 100%;

@@ -31,7 +31,7 @@ const store = useStore()
   }
   .logo-title {
     margin-left: 10px;
-    color: #fff;
+    color:#fff;
     font-weight: 600;
     line-height: 50px;
     font-size: 16px;

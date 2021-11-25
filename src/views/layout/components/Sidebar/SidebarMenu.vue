@@ -2,8 +2,8 @@
   <!-- 菜单 -->
   <el-menu
     :background-color="store.getters.cssVar.menuBg"
-    :text-color="store.getters.cssVar.subMenuActiveText"
-    :active-text-color="store.getters.cssVar.$menuText"
+    :text-color="store.getters.cssVar.menuText"
+    :active-text-color="store.getters.cssVar.menuActiveText"
     :unique-opened="true"
     :default-active="activePath"
     :router="true"

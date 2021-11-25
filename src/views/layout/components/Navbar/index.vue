@@ -5,18 +5,22 @@
     <!-- 面包屑 -->
     <breadcrumb class="breadcrumb-container"> </breadcrumb>
     <div class="right-menu">
+      <!-- 主题换肤 -->
+      <theme class="right-menu-item" />
       <!-- 国际化切换（中英文切换） -->
       <select-lang class="right-menu-item"></select-lang>
-      <el-dropdown class="avatar-container" >
+      <el-dropdown class="avatar-container">
         <!-- 头像 -->
         <div class="avatar-wrapper">
           <el-avatar shape="square" :size="40" :src="avatar"></el-avatar>
         </div>
-        <template #dropdown >
+        <template #dropdown>
           <el-dropdown-menu class="user-drop-down">
-            <el-dropdown-item>{{$t('msg.navBar.home')}}</el-dropdown-item>
-            <el-dropdown-item>{{$t('msg.navBar.course')}}</el-dropdown-item>
-            <el-dropdown-item @click="logout">{{$t('msg.navBar.logout')}}</el-dropdown-item>
+            <el-dropdown-item>{{ $t('msg.navBar.home') }}</el-dropdown-item>
+            <el-dropdown-item>{{ $t('msg.navBar.course') }}</el-dropdown-item>
+            <el-dropdown-item @click="logout">{{
+              $t('msg.navBar.logout')
+            }}</el-dropdown-item>
           </el-dropdown-menu>
         </template>
       </el-dropdown>
@@ -29,6 +33,7 @@ import { useStore } from 'vuex'
 import Cuttle from '@/components/Cuttle/index'
 import Breadcrumb from '@/components/Breadcrumb/index'
 import SelectLang from '@/components/SelectLang/index'
+import Theme from '@/components/Theme/index.vue'
 // 主动退出
 const store = useStore()
 const logout = () => {
@@ -47,16 +52,16 @@ const logout = () => {
     align-items: center;
     float: right;
     padding-right: 16px;
-    :deep(.right-menu-item){
-       display: inline-block;
-       padding: 0 18px 0 0;
-       font-size: 24px;
-       color: #ccc;
-       vertical-align: text-bottom;
-       &:hover{
-         cursor: pointer;
-         background: rgba(0,0,0,0);
-       }
+    :deep(.right-menu-item) {
+      display: inline-block;
+      padding: 0 18px 0 0;
+      font-size: 24px;
+      color: #ccc;
+      vertical-align: text-bottom;
+      &:hover {
+        cursor: pointer;
+        background: rgba(0, 0, 0, 0);
+      }
     }
     .avatar-container {
       cursor: pointer;

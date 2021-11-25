@@ -3,9 +3,9 @@
   <el-menu
     :background-color="store.getters.cssVar.menuBg"
     :text-color="store.getters.cssVar.subMenuActiveText"
+    :active-text-color="store.getters.cssVar.$menuText"
     :unique-opened="true"
     :default-active="activePath"
-    :active-text-color="store.getters.cssVar.$menuText"
     :router="true"
     :collapse="!store.getters.sideBarOpen"
   >

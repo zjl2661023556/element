@@ -1,8 +1,9 @@
 <template>
   <div class="box">
     <el-form class="box1" :model="loginForm" :rules="loginRules" ref="loginRef">
-      <div class="title">
-        <h1>用户登录</h1>
+      <div class="title-container">
+        <h1 class="title">{{ $t('msg.login.title') }}</h1>
+        <select-lang class="select-lang" />
       </div>
       <el-form-item prop="username">
         <span class="tubiao">
@@ -27,19 +28,24 @@
           <svg-icon :iconName="flag ? 'view_off' : 'view'"></svg-icon>
         </span>
       </el-form-item>
-      <el-button type="primary" @click="handleLogin">登录</el-button>
+      <el-button type="primary" @click="handleLogin">{{
+        $t('msg.login.loginBtn')
+      }}</el-button>
+      <!-- 账号tips -->
+      <div class="tips" v-html="$t('msg.login.desc')"></div>
     </el-form>
   </div>
 </template>
 <script setup>
 // 眼睛切换密码的显示
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 // 表单验证的引用
-import { passwordValidate } from './rule.js'
+import { passwordValidate, usernameValidate } from './rule.js'
 // 引入vuex
 import { useStore } from 'vuex'
 // 导入路由
 import { useRouter } from 'vue-router'
+import SelectLang from '@/components/SelectLang/index'
 
 // 定义表单初始值
 const loginForm = ref({
@@ -57,7 +63,8 @@ const loginRules = ref({
     {
       required: true,
       trigger: 'blur',
-      message: '账号没有填写'
+      // message: i18n.t('msg.login.usernameRule')   // 不具有响应式
+      validator: usernameValidate()
     }
   ],
   password: [
@@ -90,6 +97,15 @@ const handleLogin = () => {
     })
   })
 }
+
+// 监听getters.language 的变话
+watch(
+  () => store.getters.language,
+  () => {
+    loginRef.value.validateField('username')
+    loginRef.value.validateField('password')
+  }
+)
 </script>
 
 <style lang="scss" scoped>
@@ -112,12 +128,24 @@ $bg: #282c34;
     overflow: hiddern;
 
     //标题的设置
-    .title > h1 {
-      font-size: 26px;
-      color: white;
-      margin: 0px auto 40px auto;
-      text-align: center;
-      font-weight: bold;
+    .title-container {
+      position: relative;
+      .title {
+        font-size: 26px;
+        color: white;
+        margin: 0px auto 40px auto;
+        text-align: center;
+        font-weight: bold;
+      }
+      :deep(.select-lang) {
+        position: absolute;
+        top: 4px;
+        right: 0px;
+        background: aliceblue;
+        font-size: 20px;
+        border-radius: 5px;
+        cursor: pointer;
+      }
     }
 
     // input 框的设置
@@ -150,6 +178,12 @@ $bg: #282c34;
 
     .el-button--primary {
       width: 100%;
+    }
+    .tips {
+      font-size: 16 px;
+      line-height: 28px;
+      color: #fff;
+      margin-top: 10px;
     }
   }
 }

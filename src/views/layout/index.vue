@@ -6,7 +6,7 @@
     <!-- 左边 -->
     <side-bar
       class="sidebar-container"
-      :style="{ backgroundColor: variable.subMenuBg }"
+      :style="{ backgroundColor: variable.menuBg }"
     ></side-bar>
     <!-- 右边 -->
     <div class="main-container">

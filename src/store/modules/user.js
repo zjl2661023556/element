@@ -58,7 +58,7 @@ const actions = {
     // 发送axios
     getUserInfo()
       .then((res) => {
-        console.log(res)
+        // console.log(res)
         commit('setUserInfo', res)
       })
       .catch((err) => {

@@ -1,4 +1,5 @@
 import path from 'path'
+import i18n from '@/i18n/index.js'
 // 1.去除重复的二级路由，保持一二级路由的层级关系
 
 // 获取所有的二级路由
@@ -32,7 +33,7 @@ const isNull = (data) => {
   return false
 }
 
-export function generateMenus (routes, basePath = '') {
+export function generateMenus(routes, basePath = '') {
   const result = []
   // 遍历路由表
   routes.forEach((item) => {
@@ -65,4 +66,32 @@ export function generateMenus (routes, basePath = '') {
     }
   })
   return result
+}
+
+// 配合fuse.js 处理路由数据源 返回fuse.js的搜索方式
+// @param routes 是filter 过滤去重以后的路由
+export const generateFuse = (routes, titles = []) => {
+  let res = []
+  // 遍历routes
+  for (const route of routes) {
+    const data = {
+      path: route.path,
+      title: [...titles] // 不迭代的话这里是个空 title ，迭代的话 ，这里就是以后的一级标题title
+    }
+    // 条件:1 具备meta && meta.title 2. 过滤掉动态路由 /:id
+    const reg = /.*\/:.*/
+    if (route.meta && route.meta.title && !reg.exec(route.path)) {
+      // 变成国际化
+      const title = i18n.global.t('msg.route.' + route.meta.title)
+      data.title = [...data.title, title]
+      res.push(data)
+    }
+    if (route.children && route.children.length > 0) {
+      const subRes = generateFuse(route.children, data.title)
+      if (subRes.length > 0) {
+        res = [...res, ...subRes]
+      }
+    }
+  }
+  return res
 }

@@ -29,7 +29,7 @@ watch(
     breadcrumbData.value = route.matched.filter((item) => {
       return item.meta && item.meta.title
     })
-    console.log(route.matched)
+    // console.log(route.matched)
   },
   { immediate: true }
 )

@@ -5,6 +5,10 @@
     <!-- 面包屑 -->
     <breadcrumb class="breadcrumb-container"> </breadcrumb>
     <div class="right-menu">
+      <!-- 导航搜索 -->
+      <search class="right-menu-item"/>
+      <!-- 全屏切换 -->
+      <screen-full class="right-menu-item"></screen-full>
       <!-- 主题换肤 -->
       <theme class="right-menu-item" />
       <!-- 国际化切换（中英文切换） -->
@@ -34,6 +38,8 @@ import Cuttle from '@/components/Cuttle/index'
 import Breadcrumb from '@/components/Breadcrumb/index'
 import SelectLang from '@/components/SelectLang/index'
 import Theme from '@/components/Theme/index.vue'
+import ScreenFull from '@/components/Screenfull/index.vue'
+import Search from '@/components/Search/index.vue'
 // 主动退出
 const store = useStore()
 const logout = () => {
@@ -55,7 +61,7 @@ const logout = () => {
     :deep(.right-menu-item) {
       display: inline-block;
       padding: 0 18px 0 0;
-      font-size: 24px;
+      font-size: 22px;
       color: #ccc;
       vertical-align: text-bottom;
       &:hover {

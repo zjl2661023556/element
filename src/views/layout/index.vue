@@ -12,7 +12,10 @@
     <div class="main-container">
       <div class="fixed-header">
         <nav-bar></nav-bar>
+        <!-- tag-view -->
+        <tag-view></tag-view>
       </div>
+
       <app-main></app-main>
     </div>
   </div>
@@ -21,6 +24,7 @@
 import SideBar from './components/Sidebar/index.vue'
 import NavBar from './components/Navbar/index.vue'
 import AppMain from './components/Appmain/index.vue'
+import TagView from '@/components/TagView/index.vue'
 import { useStore } from 'vuex'
 const store = useStore()
 </script>

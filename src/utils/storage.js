@@ -11,7 +11,7 @@ export const setItem = (key, value) => {
 export const getItem = (key) => {
   const value = window.localStorage.getItem(key)
   try {
-    JSON.parse(value)
+    return JSON.parse(value)
   } catch {
     return value
   }
@@ -19,7 +19,7 @@ export const getItem = (key) => {
 
 // 删除
 export const deleteItem = (key) => {
-  window.localStorage.deleteItem(key)
+  window.localStorage.removeItem(key)
 }
 
 // 清空所有

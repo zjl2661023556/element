@@ -4,7 +4,20 @@
   position: absolute;
 }
 .list-enter-from,
-.list-leave-tp {
+.list-leave-to {
   opacity:0;
   transform: translateX(100px);
+}
+.fade-enter-active,
+.fade-leace-active{
+  transition: all 0.5s;
+}
+.fade-enter-from{
+  opacity:0;
+  transform: translateX(-30px);
+  top: 0;
+}
+.fade-leave-to {
+  opacity:0;
+  transform: translateX(30px);
 }

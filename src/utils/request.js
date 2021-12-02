@@ -1,40 +1,32 @@
 import axios from 'axios'
-// element ui 的报错机制
 import { ElMessage } from 'element-plus'
-// import { getItem } from '@/utils/storage.js'
-// import { TOKEN } from '@/common/common.js'
-// 导入store
+import { isCheckTimeOut } from './auth.js'
+// 导入stor
 import store from '@/store/index.js'
-import { isCheckTimeOut } from './auth'
-// 封装token
+
 const server = axios.create({
+  // 后台代理
   timeout: 5000,
-  // baseURL: 'https://api.imooc-admin.lgdsunday.club/api'
   baseURL: '/api'
 })
-
-// 不需要登录（不需要token）就能访问的借口  白名单
-// 1 const whiteUrl = ['/sys/login']
-// 请求拦截  封装token
+// 请求拦截 封装token
 server.interceptors.request.use(
   (config) => {
-    if (isCheckTimeOut()) {
-      // 过期执行退出
-      store.dispatch('user/logout')
-      // 不应该请求
-      return Promise.reject(new Error('token 过期'))
-    }
     if (store.getters.token) {
-      // 1 if (whiteUrl.includes(config.url) <= -1) {
+      if (!isCheckTimeOut()) {
+        // 过期后执行退出
+        store.dispatch('user/logout')
+        // 不应该请求
+        return Promise.reject(new Error('token 过期'))
+      }
       // 请求的不是login
-
-      // 判断token 时候存在 不存在 不封装
-      config.headers.Authorization = `Bearer ${store.getters.token}`
+      config.headers.Authorization = `Bearar ${store.getters.token}`
     }
-    // 1 }
+    // 在发送请求之前做些什么
     return config
   },
   (error) => {
+    // 对请求错误做些什么
     return Promise.reject(error)
   }
 )

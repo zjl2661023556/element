@@ -10,10 +10,14 @@ import './permission.js'
 // 导入i18n
 import i18n from '@/i18n/index.js'
 
+// 注册全局属性
+import initFilters from '@/filters/dataFilter.js'
+
 // 引入样式的主入口
 import './styles/index.scss'
 // 加载svg的处理
 const app = createApp(App)
 initSvgIcon(app)
 installElementPlus(app)
+initFilters(app)
 app.use(store).use(router).use(i18n).mount('#app')

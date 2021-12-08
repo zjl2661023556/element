@@ -21,7 +21,6 @@ export const getItem = (key) => {
 export const deleteItem = (key) => {
   window.localStorage.removeItem(key)
 }
-
 // 清空所有
 export const clearItem = () => {
   window.localStorage.clearItem()

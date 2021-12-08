@@ -33,6 +33,7 @@ export default {
         // 关闭右侧
         state.tagViewList.splice(paylod.index + 1, state.tagViewList.length - 1)
       }
+      setItem(TAG_VIEWS, state.tagViewList)
     }
   }
 }

@@ -3,7 +3,9 @@
     <!-- 二级路由显示器 -->
     <router-view v-slot="{ Component }">
       <transition name="fade" mode="out-in">
-        <component :is="Component" />
+        <keep-alive>
+          <component :is="Component" />
+        </keep-alive>
       </transition>
     </router-view>
   </div>
@@ -18,7 +20,7 @@ import { getTitle as getTitle_, watchLang } from '@/utils/i18n.js'
 const getTitle = (to) => {
   if (!to.meta || !to.meta.title) {
     // 如果不存在title以path最后一项作为title
-    const tmp = to.path.splite('/')
+    const tmp = to.path.split('/')
     return tmp[tmp.length - 1]
   } else {
     // 如果存在title

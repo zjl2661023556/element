@@ -16,7 +16,7 @@
       <svg-icon
         iconName="关闭"
         v-if="!isActive(route)"
-        class="el-icon"
+        class="el"
         @click.prevent.stop="closeCurrentTag(index)"
       ></svg-icon>
     </router-link>
@@ -119,7 +119,7 @@ watch(isShowContextMenu, (newValue, oldValue) => {
       }
     }
     // close 按钮
-    .el-icon {
+    .el{
       width: 14px;
       height: 14px;
       line-height: 15px;

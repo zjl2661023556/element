@@ -8,6 +8,15 @@ export const LANGUAGE = 'language'
 export const MYCOLOR = 'theme_color'
 
 export const TAG_VIEWS = 'tag_views'
+
+// excel 批量导入 字段对应关系
+export const USER_RELATION = {
+  姓名: 'username',
+  联系方式: 'mobile',
+  角色: 'role',
+  开通时间: 'openTime'
+  // 头像: 'avatar'
+}
 // el-color-picker 默认颜色
 export const predefineColors = [
   '#ff4500',

@@ -138,7 +138,10 @@ export default {
     importSuccess: ' Employee data imported successfully',
     dialogTitle1: 'Are you sure you want to delete the user ',
     dialogTitle2: ' Is it?',
-    roleDialogTitle: 'Configure roles'
+    roleDialogTitle: 'Configure roles',
+    nodateFormate: 'no date formate',
+    noExcelFile: 'file is no excel',
+    noJsFile: 'file is no js'
   },
   role: {
     buttonTxt: 'New Role',

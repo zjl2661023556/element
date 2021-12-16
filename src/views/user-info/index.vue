@@ -17,24 +17,24 @@
         <div class="header">
           <!-- 头部数据 -->
           <el-descriptions :column="2" border>
-            <el-descriptions-item :label="$t('msg.userInfo.name')">
-              {{ userData.username }}
-            </el-descriptions-item>
-            <el-descriptions-item :label="$t('msg.userInfo.sex')">
-              {{ userData.gender }}
-            </el-descriptions-item>
-            <el-descriptions-item :label="$t('msg.userInfo.nation')">
-              {{ userData.nationality }}
-            </el-descriptions-item>
-            <el-descriptions-item :label="$t('msg.userInfo.mobile')">
-              {{ userData.mobile }}
-            </el-descriptions-item>
-            <el-descriptions-item :label="$t('msg.userInfo.province')">
-              {{ userData.province }}
-            </el-descriptions-item>
-            <el-descriptions-item :label="$t('msg.userInfo.date')">
-              {{ $filters.dateFilter(userData.openTime) }}
-            </el-descriptions-item>
+            <el-descriptions-item :label="$t('msg.userInfo.name')">{{
+              userData.username
+            }}</el-descriptions-item>
+            <el-descriptions-item :label="$t('msg.userInfo.sex')">{{
+              userData.gender
+            }}</el-descriptions-item>
+            <el-descriptions-item :label="$t('msg.userInfo.nation')">{{
+              userData.nationality
+            }}</el-descriptions-item>
+            <el-descriptions-item :label="$t('msg.userInfo.mobile')">{{
+              userData.mobile
+            }}</el-descriptions-item>
+            <el-descriptions-item :label="$t('msg.userInfo.province')">{{
+              userData.address
+            }}</el-descriptions-item>
+            <el-descriptions-item :label="$t('msg.userInfo.date')">{{
+              $filters.dateFilter(userData.openTime)
+            }}</el-descriptions-item>
             <el-descriptions-item :label="$t('msg.userInfo.remark')">
               <el-tag
                 v-for="(tag, index) in userData.remark"
@@ -61,21 +61,24 @@
               <ul>
                 <li v-for="(item, index) in userData.experience" :key="index">
                   <span class="font"
-                    >{{ $filters.dateFilter(item.startTime, 'YYYY-MM') }}--{{
-                      $filters.dateFilter(item.endTime, 'YYYY-MM')
-                    }}</span
+                    >{{ $filters.dateFilter(item.startTime, 'YYYY-MM') }} --
+                    {{ $filters.dateFilter(item.endTime, 'YYYY-MM') }}</span
                   >
                   <span class="font">{{ item.title }}</span>
                   <span class="font">{{ item.desc }}</span>
                 </li>
               </ul>
             </el-descriptions-item>
-            <el-descriptions-item :label="$t('msg.userInfo.major')">
-              <span class="font">{{ userData.major }}</span>
-            </el-descriptions-item>
-            <el-descriptions-item :label="$t('msg.userInfo.glory')">
-              <span class="font"> {{ userData.glory }}</span>
-            </el-descriptions-item>
+            <el-descriptions-item :label="$t('msg.userInfo.major')"
+              ><span class="font">{{
+                userData.major
+              }}</span></el-descriptions-item
+            >
+            <el-descriptions-item :label="$t('msg.userInfo.glory')"
+              ><span class="font">{{
+                userData.glory
+              }}</span></el-descriptions-item
+            >
           </el-descriptions>
         </div>
 
@@ -85,21 +88,22 @@
     </el-card>
   </div>
 </template>
+
 <script setup>
 import { defineProps, ref, watch } from 'vue'
 import { userDetailById } from '@/api/user-manage.js'
-// 接受路由的参数
+
 const props = defineProps({
   id: {
     type: String,
-    require: true
+    required: true
   }
 })
+
 const userData = ref({})
 const getUserDetail = async () => {
   const data = await userDetailById(props.id)
   userData.value = data
-  console.log(userData.value)
 }
 getUserDetail()
 
@@ -109,7 +113,7 @@ const printObj = {
   popTitle: 'element-admin' // 标题
 }
 
-// 监听参数变化 重新请求借口
+// 监听参数变化,重新请求接口
 watch(
   () => {
     return props.id
@@ -126,14 +130,16 @@ watch(
     text-align: right;
     margin-bottom: 20px;
   }
+
   .user-info-box {
-    width: 1124px;
+    width: 1024px;
     margin: 0 auto;
     .title {
       text-align: center;
       margin-bottom: 18px;
       font-size: 20px;
     }
+
     .header {
       display: flex;
       :deep(.el-descriptions) {
@@ -147,14 +153,14 @@ watch(
         border-left: none;
       }
       .remark {
-        margin: right 12px;
+        margin-right: 12px;
       }
     }
+
     .body {
       .font {
         font-size: 12px;
       }
-
       ul {
         list-style: none;
         li span {

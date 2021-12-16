@@ -157,11 +157,12 @@ export const exportJsonToExcel = ({
     }),
     `${filename}.${bookType}`
   )
-  return new Promise((reslove, reject) => {
+
+  return new Promise((resolve, reject) => {
     if (true) {
-      reslove()
+      resolve()
     } else {
-      reject()
+      reject('sd')
     }
   })
 }

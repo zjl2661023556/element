@@ -8,20 +8,24 @@ export default {
   },
   mutations: {
     addTagViewList(state, route) {
+      // 不存在才添加
       const isFind = state.tagViewList.find((item) => item.path === route.path)
       if (!isFind) {
         state.tagViewList.push(route)
         setItem(TAG_VIEWS, state.tagViewList)
       }
     },
-    // 更新tagViewList 中的每一个title
+
+    // 更新 tagViewList 中的指定索引的 title
     changeTitle(state, tagViewList) {
       state.tagViewList = tagViewList
       setItem(TAG_VIEWS, state.tagViewList)
     },
 
-    // 关闭业务
-    // params: paylod:{ type:'index||other||right',index:index}
+    /*
+      关闭业务
+      params:paylod:{type:"index||other||right",index:index}
+    */
     closeTag(state, paylod) {
       if (paylod.type === 'index') {
         // 关闭当前

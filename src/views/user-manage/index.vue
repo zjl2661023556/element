@@ -1,59 +1,70 @@
 <template>
   <div class="user-manage-container">
     <el-card class="header">
-      <!-- excel 跳转按钮 -->
-      <el-button type="primary" @click="onImportExcel">
+      <!-- excel按钮 -->
+      <el-button
+        type="primary"
+        @click="onImportExcel"
+        v-showPermission="'importUser'"
+      >
         {{ $t('msg.excel.importExcel') }}
       </el-button>
-      <el-button type="success" @click="onExportExcel">
-        {{ $t('msg.excel.exportExcel') }}
-      </el-button>
+      <el-button type="success" @click="onExportExcel">{{
+        $t('msg.excel.exportExcel')
+      }}</el-button>
     </el-card>
+
     <el-card>
       <!-- table -->
       <el-table :data="tableData" border style="width: 100%">
-        <el-table-column label="#" type="index" align="center">
-        </el-table-column>
+        <el-table-column
+          label="#"
+          type="index"
+          align="center"
+        ></el-table-column>
         <el-table-column
           :label="$t('msg.excel.name')"
           prop="username"
           align="center"
-        >
-        </el-table-column>
+        ></el-table-column>
         <el-table-column
           :label="$t('msg.excel.mobile')"
           prop="mobile"
           align="center"
-        >
-        </el-table-column>
+        ></el-table-column>
         <el-table-column :label="$t('msg.excel.avatar')" align="center">
           <template v-slot="{ row }">
             <el-image
               :src="row.avatar"
-              class="avatar"
               :preview-src-list="[row.avatar]"
-            >
-            </el-image>
+              class="avatar"
+            ></el-image>
           </template>
         </el-table-column>
         <el-table-column :label="$t('msg.excel.role')" align="center">
           <template #default="{ row }">
             <div v-if="row.role && row.role.length > 0">
-              <el-tag v-for="tag in row.role" :key="tag.id" size="mini">
-                {{ tag.title }}
-              </el-tag>
+              <el-tag
+                style="margin-left: 10px"
+                v-for="tag in row.role"
+                :key="tag.id"
+                size="mini"
+                >{{ tag.title }}</el-tag
+              >
             </div>
             <div v-else>
-              <el-tag size="mini">
-                {{ $t('msg.excel.defaultRole') }}
-              </el-tag>
+              <el-tag size="mini">{{ $t('msg.excel.defaultRole') }}</el-tag>
             </div>
           </template>
         </el-table-column>
-        <el-table-column :label="$t('msg.excel.openTime')" align="center">
-          <template #default="{ row }">
-            {{ $filters.dateFilter(row.openTime) }}
-          </template>
+        <el-table-column
+          :label="$t('msg.excel.openTime')"
+          align="center"
+          prop="openTime"
+        >
+          <template #default="{ row }">{{
+            $filters.dateFilter(row.openTime)
+          }}</template>
         </el-table-column>
         <el-table-column
           :label="$t('msg.excel.action')"
@@ -67,16 +78,19 @@
               @click="showUserDetail(row)"
               >{{ $t('msg.excel.show') }}</el-button
             >
-            <el-button size="mini" type="primary">{{
-              $t('msg.excel.showRole')
-            }}</el-button>
-            <el-button size="mini" type="warning" @click="removeData(row)">{{
+            <el-button
+              size="mini"
+              type="primary"
+              @click="showRole(row)"
+              >{{ $t('msg.excel.showRole') }}</el-button
+            >
+            <el-button v-showPermission="'removeUser'" size="mini" type="warning" @click="removeData(row)">{{
               $t('msg.excel.remove')
             }}</el-button>
           </template>
         </el-table-column>
       </el-table>
-      <!-- pagination -->
+      <!-- pagenation -->
       <el-pagination
         class="pagination"
         @size-change="sizeChange"
@@ -86,20 +100,20 @@
         :page-size="size"
         layout="total,sizes,prev,pager,next,jumper"
         :total="total"
-      >
-      </el-pagination>
+      ></el-pagination>
     </el-card>
 
-    <!--excel 导出 模态框 显示 -->
+    <!-- excel 导出 模态框 -->
     <export-excel
       :dialogShow="dialogShow"
       @closeDialog="close"
+      :exportData="exportData"
       :data="dataFormate(exportData)"
       :header="Object.keys(USER_RELATION)"
       :filename="filename"
       message="下载成功"
     >
-      <!-- 选择下载的页码 -->
+      <!-- 插槽 选择下载的文件类型 -->
       <el-select
         v-model="exportType"
         placeholder="Select"
@@ -110,6 +124,14 @@
         <el-option :key="2" label="全部数据" :value="2"> </el-option>
       </el-select>
     </export-excel>
+
+    <!-- 用户修改角色模态框 -->
+    <edit-role
+      :isShowRoleDialog="isShowRoleDialog"
+      :userId="userId"
+      @close="closeRoleDialog"
+      @update="getManageUser"
+    />
   </div>
 </template>
 
@@ -119,21 +141,34 @@ import { useRouter } from 'vue-router'
 import { getUser, getAllUser, deleteUserById } from '@/api/user-manage.js'
 import ExportExcel from '@/components/ExportExcel/index.vue'
 import { USER_RELATION } from '@/common/common.js'
-import dateFilter from '@/filters/dateFilter.js'
+import dataFilter from '@/filters/dataFilter.js'
 import { useI18n } from 'vue-i18n'
 import { watchLang } from '@/utils/i18n.js'
-
 import { ElMessageBox, ElMessage } from 'element-plus'
+import EditRole from './components/EditUserRole.vue'
+
+// 角色相关
+const isShowRoleDialog = ref(false)
+const userId = ref('')
+const showRole = (row) => {
+  userId.value = row._id
+  isShowRoleDialog.value = true
+}
+const closeRoleDialog = () => {
+  isShowRoleDialog.value = false
+}
+
 // excel 相关数据定义
 const i18n = useI18n()
 const filename = ref(i18n.t('msg.excel.defaultName'))
 const router = useRouter()
 const exportType = ref(1)
 const exportData = ref([])
+
 // 表格相关数据
 const tableData = ref([])
 
-// 分页相关
+// 分页相关数据定义
 const size = ref(5)
 const page = ref(1)
 const total = ref(0)
@@ -144,26 +179,24 @@ const getManageUser = async () => {
     page: page.value,
     size: size.value
   })
-  tableData.value = data.list
-  exportData.value = data.list
+  tableData.value = exportData.value = data.list
   total.value = data.total
 }
 getManageUser()
-// excel 的导入时事件
+
+// 跳转到导入页面
 const onImportExcel = () => {
-  router.push({
-    path: '/user/import'
-  })
+  router.push({ path: '/user/import' })
 }
 
-// 导出业务
+// 导出业务相关
 const dialogShow = ref(false)
+// 点击打开模态框
 const onExportExcel = () => {
   dialogShow.value = true
   changeExportType(1)
 }
-
-// 监听diaolog ‘
+// 监听关闭模态框
 const close = () => {
   dialogShow.value = false
   exportType.value = 1
@@ -179,25 +212,26 @@ const currentChange = (currentPage) => {
   page.value = currentPage
   getManageUser()
 }
+
 // 切换下载数据文件的类型
 const changeExportType = async (value) => {
   if (value === 1) {
-    // 当前页数据
+    // 下载当前页
     filename.value = `${i18n.t('msg.excel.defaultName')}(${page.value})`
   } else {
     // 下载全部数据
-    filename.value = i18n.t('msg.excel.defaultName')
     const { list } = await getAllUser()
     exportData.value = list
+    filename.value = i18n.t('msg.excel.defaultName')
   }
 }
 
-// 转换数据格式
+// 转化数据格式
 const dataFormate = (data) => {
   return data.map((item) => {
     return Object.keys(USER_RELATION).map((key) => {
+      // 处理用户角色
       if (USER_RELATION[key] === 'role') {
-        // 处理用户角色
         const roles = item[USER_RELATION[key]]
         if (roles.length > 0) {
           return JSON.stringify(roles.map((role) => role.title))
@@ -206,18 +240,18 @@ const dataFormate = (data) => {
         }
       } else if (USER_RELATION[key] === 'openTime') {
         // 处理时间
-        return dateFilter(item[USER_RELATION[key]])
+        return dataFilter(item[USER_RELATION[key]])
       } else {
-        return item[USER_RELATION[key]] // --> item [username]
+        return item[USER_RELATION[key]]
       }
     })
   })
 }
 
-// 删除数据
+// 删除用户
 const removeData = (row) => {
   ElMessageBox.confirm(
-    `${i18n.t('msg.excel.dialogTitle1')} : ${row.username} ${i18n.t(
+    `${i18n.t('msg.excel.dialogTitle1')} "${row.username}" ${i18n.t(
       'msg.excel.dialogTitle2'
     )}`,
     i18n.t('msg.excel.remove'),
@@ -239,9 +273,14 @@ const showUserDetail = (row) => {
 }
 
 // 监听语言变化
-watchLang((lang) => {
-  filename.value = i18n.t('msg.excel.defaultName')
-})
+watchLang(
+  (lang) => {
+    filename.value = i18n.t('msg.excel.defaultName')
+  },
+  () => {
+    getManageUser()
+  }
+)
 </script>
 
 <style lang="scss" scoped>

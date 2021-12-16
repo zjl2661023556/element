@@ -1,26 +1,27 @@
 import { createI18n } from 'vue-i18n'
-import zh from './lang/zh'
-import en from './lang/en'
-import store from '@/store/index'
+import zh from './lang/zh.js'
+import en from './lang/en.js'
+import store from '@/store/index.js'
+
+// 1.定义数据源
 const messages = {
   en: {
-    msg: {
-      ...en
-    }
+    msg: { ...en }
   },
   zh: {
-    msg: {
-      ...zh
-    }
+    msg: { ...zh }
   }
 }
-// 定义语言的类型
+
+// 2.定义语言的类型
 const locale = store.getters.language || 'en'
-// 初始化 i18n
+
+// 3.初始化i18n
 const i18n = createI18n({
-  legacy: false, // 配合vue3.2 组合式api
-  globalInjection: true, // 全局注册一个t 函数
+  legacy: false, // 用来配合 vue3.2 的compostion API
+  globalInjection: true, // 全局注册一个 t 函数
   locale,
   messages
 })
+
 export default i18n

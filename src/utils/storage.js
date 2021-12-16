@@ -1,9 +1,9 @@
 // 存储数据
 export const setItem = (key, value) => {
-  // 如果value 传入的是对象 需要转换为 字符串
   if (typeof value === 'object') {
     value = JSON.stringify(value)
   }
+
   window.localStorage.setItem(key, value)
 }
 
@@ -11,17 +11,20 @@ export const setItem = (key, value) => {
 export const getItem = (key) => {
   const value = window.localStorage.getItem(key)
   try {
+    // 是一个对象的字符串
     return JSON.parse(value)
-  } catch {
+  } catch (err) {
+    // 不是一个对象的字符串
     return value
   }
 }
 
-// 删除
+// 删除单个
 export const deleteItem = (key) => {
   window.localStorage.removeItem(key)
 }
+
 // 清空所有
 export const clearItem = () => {
-  window.localStorage.clearItem()
+  window.localStorage.deleteItem()
 }

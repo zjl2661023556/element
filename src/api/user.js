@@ -1,4 +1,4 @@
-import axios from '@/utils/request'
+import axios from '@/utils/request.js'
 // 定义user相关的网络请求
 export const login = (data) => {
   // axios的请求

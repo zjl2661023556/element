@@ -1,5 +1,6 @@
-import { setItem, getItem } from '@/utils/storage'
-import { MYCOLOR } from '@/common/common'
+import { getItem, setItem } from '@/utils/storage.js'
+import { MYCOLOR } from '@/common/common.js'
+
 export default {
   namespaced: true,
   state: {
@@ -8,8 +9,9 @@ export default {
   mutations: {
     // 设置主题色
     setMyColor(state, color) {
-      setItem(MYCOLOR, color)
       state.myColor = color
+      // 保存到本地存储
+      setItem(MYCOLOR, color)
     }
   }
 }

@@ -18,9 +18,9 @@ export const getHeaderRow = (sheet) => {
   return headers
 }
 
-// 判断文件是否是excel
+// 判断文件是否是一个excel文件
 export const isExcel = (file) => {
-  return /\.(xlsx|xls|csv)$/.test(file.name)
+  return /\.(xlsx|xls)$/.test(file.name)
 }
 
 export const isJs = (file) => {
@@ -29,16 +29,16 @@ export const isJs = (file) => {
 
 // 解析excel数据
 export const readFileAsExcel = (data) => {
-  // 2-1 解析读取完毕后文件de数据（插件）
-  // 2-1-2 利用xlsx 解析文件内容
+  // 2-1-1.解析读取完毕后文件的数据(插件) data
+  // 2-1-2.利用 xlsx 解析文件内容
   const wrokbook = XLSX.read(data, { type: 'array' })
-  // 2-1-3 获取第一个表格（sheet）的名称
+  // 2-1-3.获取第一个表格(sheet)的名称
   const firstSheetName = wrokbook.SheetNames[0]
-  // 2-1-4 读取第一个sheet 的数据
+  // 2-1-4.读取第一个 sheet 的数据
   const firstSheetData = wrokbook.Sheets[firstSheetName]
-  // 2-1-5 解析表头
+  // 2-1-5.解析表头 数据
   const headers = getHeaderRow(firstSheetData)
-  // 2-1-6 解析标体 数据
+  // 2-1-6.解析表体 数据
   const bodys = XLSX.utils.sheet_to_json(firstSheetData)
   return { headers, bodys }
 }

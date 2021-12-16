@@ -1,22 +1,30 @@
 <template>
-  <div class="box">
-    <el-form class="box1" :model="loginForm" :rules="loginRules" ref="loginRef">
+  <div class="login-container">
+    <el-form
+      class="login-form"
+      :model="loginForm"
+      :rules="loginRules"
+      ref="loginRef"
+    >
       <div class="title-container">
-        <h1 class="title">{{ $t('msg.login.title') }}</h1>
+        <h3 class="title">{{ $t('msg.login.title') }}</h3>
         <select-lang class="select-lang" />
       </div>
       <el-form-item prop="username">
-        <span class="tubiao">
-          <svg-icon iconName="user"></svg-icon>
+        <span class="svg-container">
+          <svg-icon iconName="yonghu" />
         </span>
         <el-input
           placeholder="username"
           v-model="loginForm.username"
+          name="username"
+          type="text"
         ></el-input>
       </el-form-item>
+
       <el-form-item prop="password">
-        <span class="tubiao">
-          <svg-icon iconName="lock"></svg-icon>
+        <span class="svg-container">
+          <svg-icon iconName="mima" />
         </span>
         <el-input
           placeholder="password"
@@ -24,46 +32,51 @@
           name="password"
           :type="flag ? 'password' : 'text'"
         ></el-input>
-        <span class="tubiao" @click="qiehuan">
-          <svg-icon :iconName="flag ? 'view_off' : 'view'"></svg-icon>
+        <span class="svg-container" @click="toggleIcon">
+          <svg-icon :iconName="flag ? 'biyan' : 'zhengyan'" />
         </span>
       </el-form-item>
-      <el-button type="primary" @click="handleLogin">{{
-        $t('msg.login.loginBtn')
-      }}</el-button>
+
+      <el-button
+        type="primary"
+        style="width: 100%; margin-top: 30px"
+        @click="handleLogin"
+      >
+        {{ $t('msg.login.loginBtn') }}
+      </el-button>
+
       <!-- 账号tips -->
       <div class="tips" v-html="$t('msg.login.desc')"></div>
     </el-form>
   </div>
 </template>
-<script setup>
-// 眼睛切换密码的显示
-import { ref, watch } from 'vue'
-// 表单验证的引用
-import { passwordValidate, usernameValidate } from './rule.js'
-// 引入vuex
-import { useStore } from 'vuex'
-// 导入路由
-import { useRouter } from 'vue-router'
-import SelectLang from '@/components/SelectLang/index'
 
-// 定义表单初始值
+<script setup>
+import { ref, watch } from 'vue'
+import { passwordValidate, usernameValidate } from './rule.js'
+import { useStore } from 'vuex'
+import { useRouter } from 'vue-router'
+import SelectLang from '@/components/SelectLang/index.vue'
+
+// 表单数据
 const loginForm = ref({
   username: 'super-admin',
   password: '123456'
 })
+
+// 切换password状态
 const flag = ref(true)
-const qiehuan = () => {
+const toggleIcon = () => {
   flag.value = !flag.value
 }
 
-// 表单验证
+// 表单验证逻辑
 const loginRules = ref({
   username: [
     {
       required: true,
       trigger: 'blur',
-      // message: i18n.t('msg.login.usernameRule')   // 不具有响应式
+      // message: i18n.t('msg.login.usernameRule') // 不具有响应式
       validator: usernameValidate()
     }
   ],
@@ -75,12 +88,10 @@ const loginRules = ref({
   ]
 })
 
-// 登录逻辑
-// 怎么引用dom
+// 怎么去引用dom
 const loginRef = ref(null)
-// 定义store对象
+// 登录逻辑
 const store = useStore()
-// 定义路由
 const router = useRouter()
 const handleLogin = () => {
   // 验证一次表单的数据是否合法
@@ -88,7 +99,7 @@ const handleLogin = () => {
     if (!validate) {
       return // 一个规则没有通过
     }
-    // 验证通过执行的登录逻辑 定义好调用aciton 保存token
+    // 验证通过执行登录逻辑 保存token
     store.dispatch('user/login', loginForm.value).then((res) => {
       // 只有在登录成功的情况下 执行跳转
       router.push({
@@ -98,10 +109,11 @@ const handleLogin = () => {
   })
 }
 
-// 监听getters.language 的变话
+// 监听getters.language 的变化
 watch(
   () => store.getters.language,
-  () => {
+  (newValue, oldValue) => {
+    // 中英文切换了,验证重新执行
     loginRef.value.validateField('username')
     loginRef.value.validateField('password')
   }
@@ -109,81 +121,82 @@ watch(
 </script>
 
 <style lang="scss" scoped>
-$bg: #282c34;
-//最外面盒子的设置
-.box {
+$bg: #2d3a4b;
+$dark_gray: #889aa4;
+$light_gray: #eee;
+$cursor: #fff;
+.svg {
+  width: 20px;
+  height: 20px;
+  fill: aqua;
+}
+.login-container {
   min-height: 100%;
   width: 100%;
   height: 100vh;
   background: $bg;
   overflow: hidden;
 
-  //第二层盒子的设置
-  .box1 {
+  .title-container {
+    position: relative;
+    .title {
+      font-size: 30px;
+      color: $light_gray;
+      margin: 0px auto 40px auto;
+      text-align: center;
+      font-weight: bold;
+    }
+  }
+
+  :deep(.select-lang) {
+    position: absolute;
+    top: 4px;
+    right: 0px;
+    background: white;
+    font-size: 24px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  .login-form {
     position: relative;
     width: 520px;
     max-width: 100%;
-    padding: 160px 35px 0px;
+    padding: 160px 35px 0;
     margin: 0 auto;
-    overflow: hiddern;
-
-    //标题的设置
-    .title-container {
-      position: relative;
-      .title {
-        font-size: 26px;
-        color: white;
-        margin: 0px auto 40px auto;
-        text-align: center;
-        font-weight: bold;
-      }
-      :deep(.select-lang) {
-        position: absolute;
-        top: 4px;
-        right: 0px;
-        background: aliceblue;
-        font-size: 20px;
-        border-radius: 5px;
-        cursor: pointer;
-      }
-    }
-
-    // input 框的设置
+    overflow: hidden;
     :deep(.el-form-item) {
       border: 1px solid rgba(255, 255, 255, 0.1);
       background: rgba(0, 0, 0, 0.1);
       border-radius: 5px;
+      color: #454545;
       .el-input {
         height: 47px;
         width: 85%;
         .el-input__inner {
           background: transparent;
           border: 0px;
-          padding: 12px 5px 12px 10px;
-          color: #ffffff;
+          border-radius: 0px;
+          padding: 12px 5px 12px 15px;
+          color: $cursor;
           height: 47px;
+          caret-color: $cursor;
         }
       }
     }
 
-    //图标的样式
-    .tubiao {
-      padding: 6px 5px 5px 10px;
-      color: blanchedalmond;
+    .svg-container {
+      padding: 6px 0 5px 10px;
+      color: $dark_gray;
       vertical-align: middle;
       display: inline-block;
     }
 
-    //两个按钮的大小
-
-    .el-button--primary {
-      width: 100%;
-    }
     .tips {
-      font-size: 16 px;
+      font-size: 14px;
       line-height: 28px;
       color: #fff;
-      margin-top: 10px;
+      margin-bottom: 10px;
     }
   }
 }

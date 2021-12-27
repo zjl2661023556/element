@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <el-card>
     <theme-table :cbs="cbs">
       <template #default="{ headerStyleObj }">
         <el-table
@@ -56,15 +56,14 @@
         </el-table>
       </template>
     </theme-table>
-
-    <!-- 角色修改权限 模态框 -->
-    <edit-permission
-      v-if="isShowDialog"
-      :isShowDialog="isShowDialog"
-      @close="isShowDialog = false"
-      :roleId="selectRoleId"
-    />
-  </div>
+  </el-card>
+  <!-- 角色修改权限 模态框 -->
+  <edit-permission
+    v-if="isShowDialog"
+    :isShowDialog="isShowDialog"
+    @close="isShowDialog = false"
+    :roleId="selectRoleId"
+  />
 </template>
 
 <script setup>
